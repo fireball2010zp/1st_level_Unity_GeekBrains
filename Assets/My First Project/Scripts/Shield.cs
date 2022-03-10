@@ -9,7 +9,7 @@ namespace MyFirstProject
     // сначала вызывается конструктор у родительского класса MonoBehaviour
     // затем вызывается конструктор у класса Shield
 
-    public class Shield : MonoBehaviour
+    public class Shield : MonoBehaviour, ITakeDamage
     {
         [SerializeField] private float _durability; // прочность щита
                                                     // аттрибут [SerializeField] используется для видимости в настройках Unity
@@ -18,9 +18,16 @@ namespace MyFirstProject
         public void Init(float durability)
         {
             _durability = durability;
-            Destroy(gameObject, 3f); // щит будет жить 3 секунды после появления
+            Destroy(gameObject, 10f); // щит будет жить 3 секунды после появления
         }
 
+        public void Hit(float damage)
+        {
+            _durability -= damage;
+
+            if (_durability <= 0)
+                Destroy(gameObject);
+        }
     }
 }
 

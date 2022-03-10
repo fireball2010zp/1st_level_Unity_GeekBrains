@@ -7,32 +7,49 @@ using UnityEngine;
 namespace MyFirstProject
 {
     public class Player : MonoBehaviour // вешает класс на наш объект
-                                        // у MonoBehaviour конструктор закрыт
+                                                 // у MonoBehaviour конструктор закрыт
     {
         public GameObject shieldPrefab;   // объект - щит
         public Transform spawnPosition;   // позиция щита в пространстве и его размеры
 
-
+        public GameObject minePrefab;   // объект - мина
+        public Transform spawnPositionMine;   // позиция мины в пространстве
 
         private bool _isSpawnShield;
+        private bool _isSpawnMine;
+
+        [SerializeField] private float _ammunition = 0;
+
         [HideInInspector] private int level = 1;
         // [HideInInspector] - атрибут для скрытия в инспекторе кода Unity
 
         // параметры для перемещения (Vector2 - массив с двумя параметрами)
         private Vector3 _direction;
         public float speed = 2f;
-        // Vector1 - ось X (вправо), Vector2 - ось Y (вверх), Vector3 - ось Z (вперёд)
+        // Vector2 - ось X (вправо) и ось Y (вверх), Vector3 - ось Z (вперёд)
+
+        public float speedRotate = 20f;
 
         private bool _isSprint;
 
-        void Awake()
-        {
-            
-        }
-
         void Start()
         {
-            
+            /*
+            var point1 = new Vector3(1f, 5f, 1462f); 
+            // пример объявления вектора, может быть как точка, а может как и расстояние
+            // от начала координат до заданной точки
+            var point2 = new Vector3(16f, 5f, 142f);
+
+            // пример рассчета расстояния между точками
+            var dist = Vector3.Distance(point1, point2);
+            Debug.Log(dist);
+
+            // вывод длинны Vector3.down
+            Debug.Log(Vector3.down.magnitude);
+
+            // вывод длинны Vector3.one (все значения = 1)
+            Debug.Log(Vector3.one.magnitude);
+            */
         }
 
         void Update()
@@ -42,10 +59,13 @@ namespace MyFirstProject
                 _isSpawnShield = true;
             // этот метод работает и для тапов на моб платформах
 
+            if (Input.GetKey(KeyCode.M))
+                _isSpawnMine = true;
+
             _direction.x = (Input.GetAxis("Horizontal"));
             _direction.z = (Input.GetAxis("Vertical"));
 
-            /*
+            /* - расвёрнутый аналог последних двух строчек:
             // проверяем нажатие клавиш на клавиатуре (направление движения)
             if (Input.GetKey(KeyCode.W))
                 _direction.z = 1; // ось Z отвечает за направление вперёд
@@ -68,8 +88,17 @@ namespace MyFirstProject
                 SpawnShield();
             }
 
+            if (_isSpawnMine)
+            {
+                _isSpawnMine = false;
+                SpawnMine();
+            }
+
             Move(Time.fixedDeltaTime);
             // стандартное значение fixedDeltaTime = 0,2с
+
+            // поворот через мышку
+            transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * speedRotate * Time.fixedDeltaTime, 0));
         }
 
         private void SpawnShield()
@@ -93,11 +122,34 @@ namespace MyFirstProject
             // привязка щита к родителю spawnPosition
         }
 
+        private void SpawnMine()
+        {
+            var mineObj = Instantiate(minePrefab, spawnPositionMine.position, spawnPositionMine.rotation);
+            var mine = mineObj.GetComponent<Mine>();
+        }
+
         // метод реализующий движение объекта
         private void Move(float delta)
         {
-            transform.position += _direction * (_isSprint ? speed * 2 : speed) * delta;
+            var fixedDirection = transform.TransformDirection(_direction.normalized);
+            transform.position += fixedDirection * (_isSprint ? speed * 2 : speed) * delta;
             // к текущей позиции прибавляем прирост
+            // .normalized (либо метод Normalize) - приведение значения magnitude (вектора Vector3)
+            // к 1 при нажатии двух кнопок направлений (по умолчанию magnitude z+x = 1.73,
+            // поэтому по диагонали движение объекта ускоряется)
+        }
+
+        private void OnTriggerStay(Collider other)
+        { 
+
+            if (other.gameObject.tag == "Ammo")
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    _ammunition += 10;
+                    Debug.Log(message: "You got 10 bullets!");
+                }
+            }
         }
     }
 }
