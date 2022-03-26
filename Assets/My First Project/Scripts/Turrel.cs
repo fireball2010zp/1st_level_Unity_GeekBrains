@@ -43,6 +43,9 @@ namespace MyFirstProject
             var direction = _player.transform.position - transform.position;
             // результат вычитания векторов (игрока и туррели) будет вектор от туррели до игрока
 
+            direction.Set(direction.x, 0, direction.z);
+            // исключаем вращение турели по оси Y
+
             var stepRotate = Vector3.RotateTowards(transform.forward, 
                 direction, _speedRotate * Time.fixedDeltaTime, 0f);
             // transform.forward - текущее направление взгляда туррели

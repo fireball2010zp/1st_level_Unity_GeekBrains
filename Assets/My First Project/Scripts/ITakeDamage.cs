@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyFirstProject
 { 
-    // интthatqc содержит названия поведений объектов
+    // интерфейс содержит названия поведений объектов
     public interface ITakeDamage
     {
         public void Hit(float damage);

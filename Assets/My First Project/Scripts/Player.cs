@@ -17,6 +17,8 @@ namespace MyFirstProject
 
         private bool _isSpawnShield;
         private bool _isSpawnMine;
+        
+        [SerializeField] private Rigidbody _rb;
 
         [SerializeField] private float _ammunition = 0;
 
@@ -32,6 +34,13 @@ namespace MyFirstProject
 
         private bool _isSprint;
 
+        [SerializeField] private float _jumpForce = 10f;
+
+        private void Awake()
+        {
+            _rb = GetComponent<Rigidbody>();
+        }
+        
         void Start()
         {
             /*
@@ -55,29 +64,30 @@ namespace MyFirstProject
         void Update()
         {
             // провер€ем нажатие левой кнопки мыши
-            if (Input.GetMouseButtonDown(1)) // Down - при нажатии, Up - при отжатии
-                _isSpawnShield = true;
-            // этот метод работает и дл€ тапов на моб платформах
+                if (Input.GetMouseButtonDown(1)) // Down - при нажатии, Up - при отжатии
+                    _isSpawnShield = true;
+                // этот метод работает и дл€ тапов на моб платформах
 
-            if (Input.GetKey(KeyCode.M))
-                _isSpawnMine = true;
+                if (Input.GetKey(KeyCode.M))
+                    _isSpawnMine = true;
+                /*
+                _direction.x = (Input.GetAxis("Horizontal"));
+                _direction.z = (Input.GetAxis("Vertical"));
 
-            _direction.x = (Input.GetAxis("Horizontal"));
-            _direction.z = (Input.GetAxis("Vertical"));
+                 - расвЄрнутый аналог последних двух строчек:
+                // провер€ем нажатие клавиш на клавиатуре (направление движени€)
+                if (Input.GetKey(KeyCode.W))
+                    _direction.z = 1; // ось Z отвечает за направление вперЄд
+                else if (Input.GetKey(KeyCode.S))
+                    _direction.z = -1;
+                else 
+                    _direction.z = 0;
+                */
 
-            /* - расвЄрнутый аналог последних двух строчек:
-            // провер€ем нажатие клавиш на клавиатуре (направление движени€)
-            if (Input.GetKey(KeyCode.W))
-                _direction.z = 1; // ось Z отвечает за направление вперЄд
-            else if (Input.GetKey(KeyCode.S))
-                _direction.z = -1;
-            else 
-                _direction.z = 0;
-            */
+                _isSprint = (Input.GetButton("Sprint"));
 
-            _isSprint = (Input.GetButton("Sprint"));
-
-
+                if (Input.GetKeyDown(KeyCode.Space))
+                    GetComponent<Rigidbody>().AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         }
 
         void FixedUpdate()
@@ -94,11 +104,24 @@ namespace MyFirstProject
                 SpawnMine();
             }
 
-            Move(Time.fixedDeltaTime);
+            _direction.x = (Input.GetAxis("Horizontal"));
+            _direction.z = (Input.GetAxis("Vertical"));
+            
+            float sprint = (_isSprint) ? 2f : 1f;
+            
+            _direction = transform.TransformDirection(_direction);
+            _rb.MovePosition(transform.position + _direction.normalized * speed * sprint * Time.fixedDeltaTime);
+            
+            //Move(Time.fixedDeltaTime);
             // стандартное значение fixedDeltaTime = 0,2с
 
+            Vector3 rotate = new Vector3(0f, Input.GetAxis("Mouse X") * speedRotate * Time.fixedDeltaTime, 0f);
+            
             // поворот через мышку
             transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * speedRotate * Time.fixedDeltaTime, 0));
+            
+            
+            
         }
 
         private void SpawnShield()
@@ -128,16 +151,24 @@ namespace MyFirstProject
             var mine = mineObj.GetComponent<Mine>();
         }
 
+        /*
         // метод реализующий движение объекта
         private void Move(float delta)
         {
+            float sprint = (_isSprint) ? 2f : 1f;
+            
+            _direction = transform.TransformDirection(_direction);
+            _rb.MovePosition(transform.position + _direction.normalized * speed * sprint * Time.fixedDeltaTime);
+
+            /*
             var fixedDirection = transform.TransformDirection(_direction.normalized);
             transform.position += fixedDirection * (_isSprint ? speed * 2 : speed) * delta;
             // к текущей позиции прибавл€ем прирост
             // .normalized (либо метод Normalize) - приведение значени€ magnitude (вектора Vector3)
             // к 1 при нажатии двух кнопок направлений (по умолчанию magnitude z+x = 1.73,
             // поэтому по диагонали движение объекта ускор€етс€)
-        }
+            
+        } */
 
         private void OnTriggerStay(Collider other)
         { 
@@ -156,11 +187,6 @@ namespace MyFirstProject
 
 
 /*
-¬опросы
-- почему не обозначаютс€ методы €рлыком Event functions (Unity functions)?
-- MonoBehaviour не отображаетс€ как наследуемый класс (родитель)
-
-
 
 ‘ункции Awake() и Start() относ€тс€ к блоку инициализации жизненного цикла скрипта
 FixedUpdate() - блок физики (зависит от предустановленного значени€ времени), выполн€етс€ каждый фиксированный отрезок времени (настройка в Edit Ч Project Settings Ч Time Ч Fixed Timestep)

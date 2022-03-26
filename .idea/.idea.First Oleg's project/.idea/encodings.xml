@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Assets/My First Project/Scripts/Bullet.cs" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Assets/My First Project/Scripts/Door.cs" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Assets/My First Project/Scripts/Enemy.cs" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Assets/My First Project/Scripts/ITakeDamage.cs" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Assets/My First Project/Scripts/Mine.cs" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Assets/My First Project/Scripts/Player.cs" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Assets/My First Project/Scripts/Shield.cs" charset="windows-1251" />
+  </component>
+</project>
