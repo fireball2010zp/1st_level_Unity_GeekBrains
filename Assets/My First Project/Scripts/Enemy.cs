@@ -22,11 +22,23 @@ namespace MyFirstProject
         public float speed = 2f;
         //private bool _isSprint;
 
-        void Start()
+        //private NavMeshAgent _agent;
+
+        void Awake()
         {
             _player = FindObjectOfType<Player>();
             // FindObjectOfType проходится по всей сцене и инициализируется на всех противниках
 
+            //_agent = GetComponent<NavMeshAgent>();
+            // инициализация агента
+
+
+        }
+        private void Start()
+        {
+            //_agent.SetDestination(_player.transform.position);
+            // через метод SetDestination при запуске просчитывается маршрут
+            // и отправляется агент в движение 
         }
 
         private void Update()
