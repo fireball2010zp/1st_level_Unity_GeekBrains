@@ -7,7 +7,16 @@ namespace MyFirstProject
     public class Door : MonoBehaviour
     {
         [SerializeField] private Transform _rotatePoint;
+
+        [SerializeField] private Animator _anim;
+
         private bool _isStopped;
+        private readonly int IsOpen = Animator.StringToHash("IsOpen");
+
+        private void Awake()
+        {
+            _anim = GetComponent<Animator>();
+        }
 
         // метод срабатывает, когда в него заходит объект, в скобках прописывается ссылка
         // на объект, который зашел в этот триггер
@@ -15,7 +24,8 @@ namespace MyFirstProject
         {
             if (other.CompareTag("Player") && !_isStopped) // проверяем, если зашел игрок, то поворачиваем дверь
             {
-                _rotatePoint.Rotate(Vector3.up, 90);
+                _anim.SetBool(IsOpen, true);
+                //_rotatePoint.Rotate(Vector3.up, 90);
             }
         }
 
@@ -23,7 +33,8 @@ namespace MyFirstProject
         {
             if (other.CompareTag("Player") && !_isStopped)
             {
-                _rotatePoint.Rotate(Vector3.up, -90);
+                _anim.SetBool(IsOpen, false);
+                //_rotatePoint.Rotate(Vector3.up, -90);
             }
         }
 
@@ -32,7 +43,8 @@ namespace MyFirstProject
             if (other.CompareTag("Player"))
             {
                 if (Input.GetKeyDown(KeyCode.E))
-                    _isStopped = true;
+                    _anim.enabled = false;
+                    //_isStopped = true;
             }
         }
     }

@@ -8,7 +8,6 @@ namespace MyFirstProject
     {
         [SerializeField] private float _damage = 5;
         [SerializeField] private float _force = 300;
-        private Transform _target;
         private float _speed;
 
         private Rigidbody _rigidbody;
@@ -19,9 +18,8 @@ namespace MyFirstProject
         }
             
 
-        public void Init(Transform target, float lifeTime, float speed)
+        public void Init(float lifeTime, float speed)
         {
-            _target = target;
             _speed = speed;
             Destroy(gameObject, lifeTime);
             
@@ -47,7 +45,7 @@ namespace MyFirstProject
         {
             if (collision.gameObject.TryGetComponent(out ITakeDamage takeDamage))
                 takeDamage.Hit(_damage);
-                Destroy(gameObject);
+                //Destroy(gameObject);
             // TryGetComponent обходит все компоненты находящиеся на gameObject и если
             // какий либо компонент содержит интерфейс ITakeDamage, то вернуть (out) 
             // значение повреждения (takeDamage)

@@ -8,6 +8,7 @@ TagManager:
   - Ghost
   - Ammo
   - Mine
+  - Exit
   layers:
   - Default
   - TransparentFX

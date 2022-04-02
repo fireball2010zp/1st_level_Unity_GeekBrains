@@ -47,7 +47,7 @@ namespace MyFirstProject
             // создаётся луч с точки spawnPosition.position в направлении взгляда 
             // и далее проверяем есть ли по направлению луча наш игрок
             //Debug.DrawRay(spawnPosition.position, transform.forward * 10, Color.blue);
-            if (Physics.Raycast(ray, out RaycastHit hit, 6))
+            if (Physics.Raycast(ray, out RaycastHit hit, 10))
             {
                 Debug.DrawRay(spawnPosition.position, transform.forward * hit.distance, Color.blue);
                 Debug.DrawRay(hit.point, hit.normal, Color.magenta);
@@ -89,7 +89,7 @@ namespace MyFirstProject
             _isFire = false;
             var shieldObj = Instantiate(_bulletPrefab, spawnPosition.position, spawnPosition.rotation);
             var shield = shieldObj.GetComponent<Bullet>();
-            shield.Init(_player.transform, 5, 10f);
+            shield.Init(5, 10f);
 
             Invoke(nameof(Reloading), _cooldown);
             // nameof - взятие имени у каждого объекта метода Reloading, переводит его в строку

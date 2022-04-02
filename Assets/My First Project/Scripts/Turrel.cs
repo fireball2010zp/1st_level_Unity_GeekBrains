@@ -63,7 +63,7 @@ namespace MyFirstProject
         {
             var shieldObj = Instantiate(_bulletPrefab, spawnPosition.position, spawnPosition.rotation);
             var shield = shieldObj.GetComponent<Bullet>();
-            shield.Init(_player.transform, 5, 10f);
+            shield.Init(/*_player.transform,*/ 5, 10f);
         }
     }
 }

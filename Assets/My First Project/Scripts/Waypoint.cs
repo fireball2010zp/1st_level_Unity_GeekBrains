@@ -18,7 +18,7 @@ namespace MyFirstProject
 
         private bool patrolling = true;
 
-        [SerializeField] private float _speedRotate = 5;
+        [SerializeField] private float _speedRotate = 10;
 
         private void Awake()
         {
@@ -48,6 +48,12 @@ namespace MyFirstProject
                     patrolling = false;
                     StartCoroutine(AgentMode());
                 }
+                /*if (!hit.collider.CompareTag("Player"))
+                {
+                    patrolling = true;
+                    StopCoroutine(AgentMode());
+
+                }*/
             }
         }
 
@@ -59,9 +65,8 @@ namespace MyFirstProject
             var direction = _player.transform.position - spawnPosition.position;
             direction.Set(direction.x, 0, direction.z);
             var stepRotate = Vector3.RotateTowards(transform.forward,
-                direction, _speedRotate * Time.fixedDeltaTime, 1f);
+                direction, _speedRotate * Time.fixedDeltaTime, 0f);
             transform.rotation = Quaternion.LookRotation(stepRotate);
-
 
             Ray ray = new Ray(spawnPosition.position, transform.forward);
 
@@ -69,10 +74,11 @@ namespace MyFirstProject
             {
                 if (!hit.collider.CompareTag("Player"))
                 {
-                    yield return new WaitForSeconds(3);
                     patrolling = true;
+                    yield return new WaitForSeconds(5);
                 }
             }
+            
         }
     }
 
