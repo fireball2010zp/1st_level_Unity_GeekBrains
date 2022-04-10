@@ -39,6 +39,7 @@ namespace MyFirstProject
             transform.LookAt(new Vector3(_camera.transform.position.x, transform.position.y, _camera.transform.position.z));
             transform.Rotate(0, 180, 0);
         }
+
     }
 }
 
